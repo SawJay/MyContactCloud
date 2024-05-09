@@ -1,0 +1,16 @@
+﻿@page "/contacts/create"
+@using Microsoft.AspNetCore.Authorization
+@using MyContactCloud.Client.Components.UI.Contact
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>My Contact Cloud | New Contact</PageTitle>
+
+<div class="py-3 my-5 border border-2 shadow-lg bg-light">
+    <ContactForm Contact="new ContactDTO()" />
+
+</div>
+
+@code {
+
+}

@@ -1,0 +1,113 @@
+﻿@page "/categories"
+@using Microsoft.AspNetCore.Authorization
+@using MyContactCloud.Client.Components.UI.Categories
+@using MyContactCloud.Client.Helpers
+@using MyContactCloud.Client.Models
+@using MyContactCloud.Client.Services.Interfaces
+@using MyContactCloud.Client.Components.UI
+@rendermode InteractiveServer
+@attribute [Authorize]
+@inject ICategoryDTOService CategoryService
+
+<PageTitle>My Contact Cloud | Categories </PageTitle>
+
+<div class="container">
+    <EditForm OnValidSubmit="HandleSubmit" Model="formCategory">
+        <DataAnnotationsValidator />
+
+        <ul class="list-group my-3">
+            <li class="list-group-item">
+                <label class="form-label" for="categoryName">
+                    Add a Category
+                </label>
+                <div class="d-flex gap-3">
+                    <InputText class="form-control" placeholder="Category Name" @bind-Value="formCategory.Name">
+                    </InputText>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-floppy"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="() => formCategory.Name" />
+            </li>
+        </ul>
+    </EditForm>
+
+    <CategoryAccordion Categories="categories" OnCategoryDelete="DeleteCategory" OnCategoryUpdate="UpdateCategory" />
+
+    
+</div>
+
+@code {
+    #region component parameters
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthStateTask { get; set; }
+    #endregion
+
+
+    #region component state
+    private CategoryDTO formCategory = new CategoryDTO();
+    private UserInfo? userInfo;
+    private IEnumerable<CategoryDTO> categories = [];
+
+    #endregion
+
+
+    #region component methods
+
+    protected override async Task OnInitializedAsync()
+    {
+        userInfo = await UserInfoHelper.GetUserInfoAsync(AuthStateTask);
+
+        categories = (await CategoryService.GetCategoriesAsync(userInfo!.UserId)).ToList();
+    }
+
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            await CategoryService.CreateCategoryAsync(formCategory, userInfo!.UserId);
+            categories = await CategoryService.GetCategoriesAsync(userInfo!.UserId);
+            formCategory = new CategoryDTO();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+
+    private async Task DeleteCategory(int categoryId)
+    {
+        try
+        {
+            // delete the category
+            await CategoryService.DeleteCategoryAsync(categoryId, userInfo!.UserId);
+
+            // update
+            categories = await CategoryService.GetCategoriesAsync(userInfo!.UserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+
+    }
+
+    private async Task UpdateCategory(CategoryDTO category)
+    {
+        try
+        {
+            await CategoryService.UpdateCategoryAsync(category, userInfo!.UserId);
+            categories = await CategoryService.GetCategoriesAsync(userInfo!.UserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+
+    #endregion
+}
