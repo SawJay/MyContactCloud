@@ -1,14 +1,42 @@
 ﻿@page "/contacts"
 @using Microsoft.AspNetCore.Authorization
+@using MyContactCloud.Client.Services.Interfaces
 @attribute [Authorize]
+@inject IContactDTOService ContactService
 
 <PageTitle>MyContactCloud | Contacts</PageTitle>
 
 <div class="d-flex align-items-center mt-3">
     <h1>All Contacts</h1>
     <a href="contacts/create" class="ms-auto btn btn-primary rounded-pill">New Contact</a>
+
+    <ul>
+        @foreach(ContactDTO contact in contacts)
+        {
+            <li>
+                <img height="30" src="@contact.ImageUrl" />
+                @contact.FullName
+            </li>
+        }
+    </ul>
 </div>
 
 @code {
-    
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthStateTask { get; set; }
+
+    private IEnumerable<ContactDTO> contacts = [];
+    private UserInfo? userInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // get id from auth state
+        // make getcontacts in dto service
+        // make a repo method for getcontacts async
+        // add those to interface
+        userInfo = await UserInfoHelper.GetUserInfoAsync(AuthStateTask);
+
+        contacts = await ContactService.GetContactsAsync(userInfo!.UserId);
+    }
+
 }
