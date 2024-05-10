@@ -1,49 +1,78 @@
-﻿<div class="card h-100">
+﻿@using MyContactCloud.Client.Models
+
+@if (Contact is not null)
+{
+<div class="card h-100">
     <div class="row g-0">
         <div class="col-md-4 square-img-container rounded-start overflow-hidden">
-            @* contact image here *@
-            <img src=“” class="square-img" />
+            <img src="@Contact.ImageUrl" class="square-img" />
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">@* contact first and last name *@</h5>
+                <h5 class="card-title">@Contact.FullName</h5>
                 <address class="card-text">
-                    @*
-                    Contact address 1, address 2, city, state, and zip
-                    *@
-                </address>
+                    @Contact.Address1<br/>
+                        @if (!string.IsNullOrEmpty(Contact.Address2))
+                        {
+                            @Contact.Address2 <br />
+                        }
+                        @Contact.City, @Contact.State @Contact.ZipCode
+                    </address>
                 <div class="card-text">
-                    <span class="fw-bold me-2">Phone:</span>@* phone number *@
+                    <span class="fw-bold me-2">Phone:</span>@Contact.PhoneNumber
                 </div>
                 <div class="card-text text-truncate">
-                    <span class="fw-bold me-2">Email:</span>@* email address *@
+                    <span class="fw-bold me-2">Email:</span>@Contact.Email
                 </div>
 
-                <div class="fs-4">
-                    <a class="me-3 editIcons" href=“@* link to edit contact *@“><i class="bi bi-pencil-fill "></i></a>
-                    <a class="me-3 editIcons" href=“#”><i class="bi bi-envelope-fill "></i></a>
-                    <a class="me-3 editIcons" role="button" @* show “are you sure?” *@>
-                        <i class="bi bi-trash-fill text-danger "></i>
-                    </a>
-                </div>
+                    @if(isDeleting is false)
+                    {
+                        <div class="fs-4">
+                            <a class="me-3 editIcons" href="contacts/edit/@Contact.Id"><i class="bi bi-pencil-fill "></i></a>
+                            <a class="me-3 editIcons" href="#"><i class="bi bi-envelope-fill "></i></a>
+                            <a class="me-3 editIcons" role="button" @onclick="() => isDeleting = true">
+                                <i class="bi bi-trash-fill text-danger "></i>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-danger">Are you sure you want to delete this contact? </div>
+                        <button class="btn btn-sm btn-danger me-1">Delete</button>
+                        <button class="btn btn-sm btn-secondary" @onclick="() => isDeleting = false">Cancel</button>
+                    }
 
-                <div class="hstack gap-2 flex-wrap">
-                    @* show actual contact categories here *@
-                    <a href=“#” class="text-decoration-none badge rounded-pill border border-1 text-dark fw-normal">
-                        Category one
-                    </a>
-                    <a href=“#” class="text-decoration-none badge rounded-pill border border-1 text-dark fw-normal">
-                        Category two
-                    </a>
-                    <a href=“#” class="text-decoration-none badge rounded-pill border border-1 text-dark fw-normal">
-                        Category three
-                    </a>
-                </div>
+                <div class="hstack gap-2 flex-wrap mt-2">
+                        @foreach (CategoryDTO category in Contact.Categories)
+                        {
+                            <a href="#" class="text-decoration-none badge rounded-pill border border-1 text-dark fw-normal">
+                                @category.Name
+                            </a>
+                        }
+                    </div>
             </div>
         </div>
     </div>
 </div>
+}
 
 @code {
+    [Parameter, EditorRequired]
+    public ContactDTO? Contact { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+
+
+    bool isDeleting = false;
+
+    
+  
+    private async Task DeleteContact ()
+    {
+        await OnDelete.InvokeAsync(Contact!.Id);
+        isDeleting = false;
+    }
 
 }

@@ -15,7 +15,7 @@
                 <div>
                     <InputFile OnChange="OnFileChange" class="form-control mt-2" accept=".png, .jpg, .jpeg, .svg" />
                     <span class="text-danger">
-                        @* images w errors *@
+                        @imageError
                     </span>
                 </div>
             </div>
@@ -140,6 +140,8 @@
             userInfo = await UserInfoHelper.GetUserInfoAsync(AuthStateTask);
             // get categories from the service
             categories = await CategoryService.GetCategoriesAsync(userInfo!.UserId);
+
+            selectedCategoryIds = Contact!.Categories.Select(c => c.Id).ToArray();
         }
         catch (Exception ex)
         {
@@ -150,6 +152,8 @@
 
     private async Task HandleSubmit ()
     {
+        Contact!.Categories.Clear();
+
         foreach(int Id in selectedCategoryIds)
         {
             foreach(CategoryDTO category in categories)

@@ -89,9 +89,17 @@ namespace MyContactCloud.Services
                     contact.Image = null;
                 }
 
-                // TODO: categories???
+                // do not let database update categories yet
+                contact.Categories.Clear();
 
                 await repository.UpdateContactAsync(contact);
+
+                // remove old categories
+                await repository.RemoveCategoriesFromContactAsync(contact.Id, userId);
+
+                // add back whatever the user selected
+                IEnumerable<int> selectedCategoryIds = contactDTO.Categories.Select(c => c.Id);
+                await repository.AddCategoriesToContactAsync(contact.Id, userId, selectedCategoryIds);
             }
         }
     }

@@ -1,8 +1,11 @@
 ﻿@page "/contacts"
 @using Microsoft.AspNetCore.Authorization
+@using MyContactCloud.Client.Components.UI.Contact
 @using MyContactCloud.Client.Services.Interfaces
+@using MyContactCloud.Client.Components.UI
 @attribute [Authorize]
 @inject IContactDTOService ContactService
+@rendermode InteractiveServer
 
 <PageTitle>MyContactCloud | Contacts</PageTitle>
 
@@ -38,7 +41,12 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-1 g-3">
             @if(contacts.Any())
             {
-                @* show contacts *@
+                @foreach(ContactDTO contact in contacts)
+                {
+                    <div class="col" @key="contact.Id">
+                        <ContactCard Contact="contact" />
+                    </div>
+                }
             }
             else
             {

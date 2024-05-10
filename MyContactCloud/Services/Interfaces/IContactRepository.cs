@@ -7,6 +7,7 @@ namespace MyContactCloud.Services.Interfaces
     {
         Task<Contact> CreateContactAsync(Contact contact);
         Task AddCategoriesToContactAsync(int contactId, string userId, IEnumerable<int> categoryIds);
+        Task RemoveCategoriesFromContactAsync(int contactId, string userId);
         Task<IEnumerable<Contact>> GetContactsAsync(string userId);
         Task UpdateContactAsync(Contact contact);
         Task<Contact?> GetContactByIdAsync(int contactId, string userId);
