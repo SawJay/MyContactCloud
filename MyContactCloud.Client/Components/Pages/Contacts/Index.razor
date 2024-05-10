@@ -9,17 +9,21 @@
 <div class="d-flex align-items-center mt-3">
     <h1>All Contacts</h1>
     <a href="contacts/create" class="ms-auto btn btn-primary rounded-pill">New Contact</a>
+</div>
 
-    <ul>
+    <div>
         @foreach(ContactDTO contact in contacts)
         {
             <li>
                 <img height="30" src="@contact.ImageUrl" />
                 @contact.FullName
+                <a href="contacts/edit/@contact.Id" class="btn btn-primary btn-sm">
+                    Edit
+                </a>
+                @* go to url like contacts/edit/5 to edit contact with ID of 5 *@
             </li>
         }
-    </ul>
-</div>
+    </div>
 
 @code {
     [CascadingParameter]

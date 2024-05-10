@@ -1,0 +1,61 @@
+﻿@page "/contacts/edit/{id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using MyContactCloud.Client.Services.Interfaces
+@using MyContactCloud.Client.Components.UI.Contact
+@inject IContactDTOService ContactService
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<PageTitle>MyContactCloud | Edit Contact</PageTitle>
+
+<h3>EditContact</h3>
+<p>Contact ID is @Id</p>
+
+<div class="py-3 my-5 border border-2 shadow-lg bg-light">
+    <ContactForm Contact="contactToEdit" OnSubmit="HandleSubmit" />
+</div>
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthStateTask { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+
+    private ContactDTO? contactToEdit;
+    private IEnumerable<ContactDTO> contacts = [];
+
+    private UserInfo? userInfo;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userInfo = await UserInfoHelper.GetUserInfoAsync(AuthStateTask);
+
+            contactToEdit = await ContactService.GetContactByIdAsync(Id, userInfo!.UserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+        if(contactToEdit is null)
+        {
+            Nav.NavigateTo("contacts");
+        }
+
+    }
+
+    private async Task HandleSubmit (ContactDTO contact)
+    {
+        await ContactService.UpdateContactAsync(contact, userInfo!.UserId);
+        Nav.NavigateTo("contacts");
+    }
+}
