@@ -11,6 +11,15 @@ namespace MyContactCloud.Services.Interfaces
         Task<IEnumerable<Contact>> GetContactsAsync(string userId);
         Task UpdateContactAsync(Contact contact);
         Task<Contact?> GetContactByIdAsync(int contactId, string userId);
+
+        /// <summary>
+        /// Retrieves all contacts that belong to given category
+        /// </summary>
+        /// <param name="categoryId">ID of category to search</param>
+        /// <param name="userId">ID of the user</param>
+        /// <returns>Collection of contacts belonging to the given category</returns>
+        Task<IEnumerable<Contact>> GetContactsByCategoryIdAsync(int categoryId, string userId);
+        Task<IEnumerable<Contact>> SearchContactsAsync(string searchTerm, string userId);
         Task DeleteContactAsync(int contactId, string userId);
 
 

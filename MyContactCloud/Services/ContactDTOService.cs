@@ -68,6 +68,27 @@ namespace MyContactCloud.Services
             return contactDtos;
         }
 
+        public async Task<IEnumerable<ContactDTO>> GetContactsByCategoryIdAsync(int categoryId, string userId)
+        {
+            IEnumerable<Contact> contacts = await repository.GetContactsByCategoryIdAsync(categoryId, userId);
+
+            List<ContactDTO> dtos = [];
+
+            foreach (Contact contact in contacts)
+            {
+                dtos.Add(contact.ToDTO());
+            }
+
+            return dtos;
+        }
+
+        public async Task<IEnumerable<ContactDTO>> SearchContactsAsync(string searchTerm, string userId)
+        {
+            IEnumerable<Contact> contacts = await repository.SearchContactsAsync(searchTerm, userId);
+
+            return contacts.Select(contact => contact.ToDTO());
+        }
+
         public async Task UpdateContactAsync(ContactDTO contactDTO, string userId)
         {
             Contact? contact = await repository.GetContactByIdAsync(contactDTO.Id, userId);

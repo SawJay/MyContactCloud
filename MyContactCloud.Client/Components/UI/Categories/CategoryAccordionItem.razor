@@ -23,7 +23,7 @@
                             <a role="button" class="me-1" @onclick="() => status = Status.Deleting">
                                 <i class="bi bi-trash-fill text-danger" aria-label="Delete Category"></i>
                             </a>
-                            <a class="me-1" href="contacts">
+                            <a class="me-1" href="contacts?categoryId=@Category.Id">
                                 <i class="bi bi-eye-fill" aria-label="View Category"></i>
                             </a>
                             <a class="me-1" href="#">
@@ -115,7 +115,6 @@
 
     [Parameter, EditorRequired]
     public EventCallback<CategoryDTO> OnUpdate { get; set; }
-
 
 
     private enum Status

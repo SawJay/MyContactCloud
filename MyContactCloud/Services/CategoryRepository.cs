@@ -34,7 +34,7 @@ namespace MyContactCloud.Services
         {
             using ApplicationDbContext context = contextFactory.CreateDbContext();
 
-            IEnumerable<Category> categories = await context.Categories.Where(x => x.AppUserId == userId).ToListAsync();
+            IEnumerable<Category> categories = await context.Categories.Where(x => x.AppUserId == userId).Include(c => c.Contacts).ToListAsync();
 
             return categories;
         }
