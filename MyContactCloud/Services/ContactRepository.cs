@@ -105,5 +105,18 @@ namespace MyContactCloud.Services
                 }
             }
         }
+
+        public async Task DeleteContactAsync(int contactId, string userId)
+        {
+            using ApplicationDbContext context = contextFactory.CreateDbContext();
+
+            Contact? contact = await context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId && c.AppUserId == userId);
+
+            if (contact is not null)
+            {
+                context.Contacts.Remove(contact);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

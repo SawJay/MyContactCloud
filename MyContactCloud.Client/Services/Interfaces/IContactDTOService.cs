@@ -8,5 +8,6 @@ namespace MyContactCloud.Client.Services.Interfaces
         Task<IEnumerable<ContactDTO>> GetContactsAsync(string userId);
         Task UpdateContactAsync(ContactDTO contactDTO, string userId);
         Task<ContactDTO?> GetContactByIdAsync(int contactId, string userId);
+        Task DeleteContactAsync(int contactId, string userId);
     }
 }

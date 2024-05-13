@@ -41,6 +41,11 @@ namespace MyContactCloud.Services
 
         }
 
+        public async Task DeleteContactAsync(int contactId, string userId)
+        {
+            await repository.DeleteContactAsync(contactId, userId);
+        }
+
         public async Task<ContactDTO?> GetContactByIdAsync(int contactId, string userId)
         {     
                 Contact? contact = await repository.GetContactByIdAsync(contactId, userId);

@@ -44,7 +44,7 @@
                 @foreach(ContactDTO contact in contacts)
                 {
                     <div class="col" @key="contact.Id">
-                        <ContactCard Contact="contact" />
+                        <ContactCard Contact="contact" OnDelete="DeleteContact"/>
                     </div>
                 }
             }
@@ -77,6 +77,24 @@
         userInfo = await UserInfoHelper.GetUserInfoAsync(AuthStateTask);
 
         contacts = await ContactService.GetContactsAsync(userInfo!.UserId);
+    }
+
+    private async Task DeleteContact(int contactId)
+    {
+        try
+        {
+            // delete the category
+            await ContactService.DeleteContactAsync(contactId, userInfo!.UserId);
+
+            // update
+            contacts = await ContactService.GetContactsAsync(userInfo!.UserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+
     }
 
 }

@@ -11,6 +11,7 @@ namespace MyContactCloud.Services.Interfaces
         Task<IEnumerable<Contact>> GetContactsAsync(string userId);
         Task UpdateContactAsync(Contact contact);
         Task<Contact?> GetContactByIdAsync(int contactId, string userId);
+        Task DeleteContactAsync(int contactId, string userId);
 
 
     }
