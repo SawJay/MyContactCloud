@@ -32,7 +32,7 @@
                         </span>
                     </div>
                 </div>
-            } 
+            }
             else if (status == Status.Deleting)
             {
                 <div class="d-md-flex gap-3 p-3">
@@ -59,7 +59,7 @@
                         </span>
                     </div>
                 </div>
-            } 
+            }
             else if (status == Status.Editing)
             {
                 <EditForm Model="Category" class="d-md-flex gap-3 p-3 align-items-center" OnValidSubmit="HandleUpdate">
@@ -91,12 +91,26 @@
         </div>
         <div id="collapse-@Category.Id" class="accordion-collapse collapse" data-bs-parent="#@AccordionId">
             <div class="accordion-body">
-                <ul class="list-group">
-                    @* Display contacts *@
-                    <li class="list-group-item text-center lead text-secondary">
-                        No contacts in this category.
-                    </li>
-                </ul>
+                <div class="list-group">
+                    @if (Category.Contacts is not null)
+                    {
+                        @foreach (ContactDTO contact in Category.Contacts)
+                        {
+                            <li class="list-group-item text-start lead text-secondary border-transparent text-bold">
+                                <a href="contacts/edit/@contact.Id" class="me-3 text-decoration-none text-dark text-bold">
+                                    <img src="@contact.ImageUrl" class="accordion-image" />
+                                    <span>@contact.FullName</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item text-center lead text-secondary">
+                            No contacts in this category.
+                        </li>
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -137,7 +151,7 @@
         }
     }
 
-    private void CancelEdit ()
+    private void CancelEdit()
     {
         if (!string.IsNullOrEmpty(originalName))
         {
