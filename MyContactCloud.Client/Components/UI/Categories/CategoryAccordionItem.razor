@@ -26,7 +26,7 @@
                             <a class="me-1" href="contacts?categoryId=@Category.Id">
                                 <i class="bi bi-eye-fill" aria-label="View Category"></i>
                             </a>
-                            <a class="me-1" href="#">
+                            <a class="me-1" href="categories/email/@Category.Id">
                                 <i class="bi bi-envelope-fill" aria-label="Email Category"></i>
                             </a>
                         </span>
@@ -96,10 +96,10 @@
                     {
                         @foreach (ContactDTO contact in Category.Contacts)
                         {
-                            <li class="list-group-item text-start lead text-secondary border-transparent text-bold">
+                            <li class="list-group-item text-start text-secondary border-transparent text-bold">
                                 <a href="contacts/edit/@contact.Id" class="me-3 text-decoration-none text-dark text-bold">
                                     <img src="@contact.ImageUrl" class="accordion-image" />
-                                    <span>@contact.FullName</span>
+                                    <span class="p-2">@contact.FullName</span>
                                 </a>
                             </li>
                         }

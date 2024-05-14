@@ -56,6 +56,10 @@
                 </InputSelect>
             </div>
         </div>
+        @if (!string.IsNullOrEmpty(toastMessage))
+        {
+            <ToastMessage @key="messageId" Message="@toastMessage" Color="@messageColor" />
+        }
     </div>
     <div class="col-12 col-lg-8">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-1 g-3">
@@ -91,11 +95,18 @@
     [SupplyParameterFromQuery] // ?searchTerm=sawyer
     public string? SearchTerm { get; set; }
 
+    [SupplyParameterFromQuery] // ?message=hello
+    public string? Message { get; set; }
+
     private IEnumerable<ContactDTO> contacts = [];
     private UserInfo? userInfo;
     private IEnumerable<CategoryDTO> categories = [];
 
     private string? searchInput;
+
+    private string? toastMessage;
+    private string? messageColor;
+    private Guid messageId = Guid.NewGuid();
 
 
     protected override async Task OnInitializedAsync()
@@ -106,6 +117,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        if (!string.IsNullOrEmpty(Message))
+        {
+            ShowToastMessage(Message);
+        }
+
         if (!string.IsNullOrWhiteSpace(SearchTerm))
         {
             searchInput = SearchTerm;
@@ -143,6 +159,8 @@
 
     private void HandleCategoryChanged()
     {
+        ShowToastMessage("Category was changed");
+
         string url = Nav.GetUriWithQueryParameter(nameof(CategoryId), CategoryId);
         Nav.NavigateTo(url);
     }
@@ -156,6 +174,22 @@
 
         string url = Nav.GetUriWithQueryParameters(queryParameters);
         Nav.NavigateTo(url);
+    }
+
+    private void ShowToastMessage (string message)
+    {
+        toastMessage = message;
+
+        if(message.ToLower().Contains("wrong") || message.Contains("error"))
+        {
+            messageColor = "danger";
+        }
+        else
+        {
+            messageColor = "success";
+        }
+
+        messageId = Guid.NewGuid();
     }
 
 

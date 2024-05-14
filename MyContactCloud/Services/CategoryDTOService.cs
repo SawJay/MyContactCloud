@@ -1,11 +1,12 @@
-﻿using MyContactCloud.Client.Models;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using MyContactCloud.Client.Models;
 using MyContactCloud.Client.Services.Interfaces;
 using MyContactCloud.Model;
 using MyContactCloud.Services.Interfaces;
 
 namespace MyContactCloud.Services
 {
-    public class CategoryDTOService(ICategoryRepository repository) : ICategoryDTOService
+    public class CategoryDTOService(ICategoryRepository repository, IEmailSender emailSender) : ICategoryDTOService
     {
         public async Task<CategoryDTO> CreateCategoryAsync(CategoryDTO category, string userId)
         {
@@ -58,6 +59,27 @@ namespace MyContactCloud.Services
         {
             Category? category = await repository.GetCategoryByIdAsync(categoryId, userId);
             return category?.ToDTO();
+        }
+
+        public async Task<bool> EmailCategoryAsync(int categoryId, EmailData emailData, string userId)
+        {
+            try
+            {
+                Category? category = await repository.GetCategoryByIdAsync(categoryId, userId);
+
+                if (category is null || category.Contacts.Count < 1) return false;
+
+                string recipients = string.Join(';', category.Contacts.Select(c => c.Email!));
+                await emailSender.SendEmailAsync(recipients, emailData.Subject!, emailData.Message!);
+
+                return true;
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
         }
     }
 
