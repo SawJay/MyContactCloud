@@ -51,6 +51,8 @@ namespace MyContactCloud.Services
             {
                 categoryToUpdate.Name = category.Name;
 
+                categoryToUpdate.Contacts.Clear();
+
                 await repository.UpdateCategoryAsync(categoryToUpdate, userId);
             }
         }

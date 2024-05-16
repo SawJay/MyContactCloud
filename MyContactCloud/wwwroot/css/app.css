@@ -24,6 +24,10 @@ html, body {
     height: 100%
 }
 
+.devicons {
+    font-size: 3rem;
+}
+
 a, .btn-link {
     color: #006bb7;
 }
