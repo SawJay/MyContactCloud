@@ -7,7 +7,7 @@
 @inject IContactDTOService ContactService
 @inject ICategoryDTOService CategoryService
 @inject NavigationManager Nav
-@rendermode InteractiveServer
+@rendermode InteractiveAuto
 
 <PageTitle>My Contact Cloud | Contacts</PageTitle>
 
@@ -159,9 +159,14 @@
 
     private void HandleCategoryChanged()
     {
-        ShowToastMessage("Category was changed");
+        Dictionary<string, object?> queryParameters = new Dictionary<string, object?>()
+        {
+            { nameof(CategoryId), CategoryId },
+            { nameof(SearchTerm), null },
+            { nameof(Message), null }
+        };
 
-        string url = Nav.GetUriWithQueryParameter(nameof(CategoryId), CategoryId);
+        string url = Nav.GetUriWithQueryParameters(queryParameters);
         Nav.NavigateTo(url);
     }
 
@@ -169,18 +174,20 @@
     {
         Dictionary<string, object?> queryParameters = new Dictionary<string, object?>()
         {
-            { nameof(CategoryId), null}, {nameof(SearchTerm), searchInput}
+            { nameof(CategoryId), null },
+            { nameof(SearchTerm), searchInput },
+            { nameof(Message), null }
         };
 
         string url = Nav.GetUriWithQueryParameters(queryParameters);
         Nav.NavigateTo(url);
     }
 
-    private void ShowToastMessage (string message)
+    private void ShowToastMessage(string message)
     {
         toastMessage = message;
 
-        if(message.ToLower().Contains("wrong") || message.Contains("error"))
+        if (message.ToLower().Contains("wrong") || message.ToLower().Contains("error"))
         {
             messageColor = "danger";
         }

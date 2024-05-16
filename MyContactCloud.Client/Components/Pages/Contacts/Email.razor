@@ -4,7 +4,6 @@
 @using MyContactCloud.Client.Components.UI
 @using MyContactCloud.Client.Services.Interfaces
 @inject IContactDTOService ContactService
-@inject ICategoryDTOService CategoryService
 @inject NavigationManager Nav
 
 @rendermode InteractiveServer
@@ -28,9 +27,16 @@
     [CascadingParameter]
     private Task<AuthenticationState>? AuthStateTask { get; set; }
 
+    [SupplyParameterFromQuery] // ?message=hello
+    public string? Message { get; set; }
+
     private EmailData? emailData;
     private UserInfo? userInfo;
     private ContactDTO? contact;
+
+    private string? toastMessage;
+    private string? messageColor;
+    private Guid messageId = Guid.NewGuid();
 
 
     protected override async Task OnInitializedAsync()
@@ -54,30 +60,46 @@
         }
         else
         {
-            string emails = contact.Email!;
-            string recipients = string.Join("; ", emails);
+            // string emails = contact.Email!;
+            // string recipients = string.Join("; ", emails);
+
+            // emailData = new EmailData()
+            //     {
+            //         Recipients = recipients,
+            //         Subject = $"Message for {contact.FullName}"
+            //     };
 
             emailData = new EmailData()
-                {
-                    Recipients = recipients,
+            {
+                    Recipients = contact.Email,
                     Subject = $"Message for {contact.FullName}"
-                };
+            };
         }
 
     }
 
-    private async Task HandleSubmit()
+    private async Task HandleSubmit(EmailData formEmailData)
     {
+        // send email
+        // redirect to contacts index
+        string message = $"Something went wrong emailing {contact?.FullName}. Please try again later.";
+
         // send email
         // redirect to contacts index
         try
         {
-            await ContactService.EmailContactAsync(ContactId, emailData!, userInfo!.UserId);
+            bool success = await ContactService.EmailContactAsync(ContactId, formEmailData, userInfo!.UserId);
+
+            if (success)
+            {
+                message = $"Email successfully sent to {contact?.FullName}!";
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
-        Nav.NavigateTo("contacts");
+        Nav.NavigateTo($"contacts?message={message}");
     }
+
 }
