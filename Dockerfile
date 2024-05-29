@@ -7,7 +7,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
-COPY ["MyContactCloud/MyContactCloud.csproj", "MyContactCloud"]
+COPY ["MyContactCloud/MyContactCloud.csproj", "MyContactCloud/"]
 COPY ["MyContactCloud.Client/MyContactCloud.Client.csproj", "MyContactCloud.Client/"]
 RUN dotnet restore "MyContactCloud/MyContactCloud.csproj"
 COPY . .
