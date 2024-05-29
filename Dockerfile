@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 COPY ["MyContactCloud/MyContactCloudcsproj", "MyContactCloud"]
-COPY ["MyContactCloudClient/MyContactCloud.Client.csproj", "MyContactCloud.Client/"]
+COPY ["MyContactCloud.Client/MyContactCloud.Client.csproj", "MyContactCloud.Client/"]
 RUN dotnet restore "MyContactCloud/MyContactCloud.csproj"
 COPY . .
 WORKDIR "/src/MyContactCloud"
