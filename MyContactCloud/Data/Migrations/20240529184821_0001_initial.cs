@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyContactCloud.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class _001_Initial : Migration
+    public partial class _0001_initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

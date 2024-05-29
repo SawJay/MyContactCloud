@@ -433,7 +433,7 @@ namespace MyContactCloud.Data.Migrations
             modelBuilder.Entity("MyContactCloud.Model.Category", b =>
                 {
                     b.HasOne("MyContactCloud.Data.ApplicationUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Categories")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -444,7 +444,7 @@ namespace MyContactCloud.Data.Migrations
             modelBuilder.Entity("MyContactCloud.Model.Contact", b =>
                 {
                     b.HasOne("MyContactCloud.Data.ApplicationUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Contacts")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -456,6 +456,13 @@ namespace MyContactCloud.Data.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Image");
+                });
+
+            modelBuilder.Entity("MyContactCloud.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Contacts");
                 });
 #pragma warning restore 612, 618
         }
