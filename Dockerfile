@@ -7,17 +7,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
-COPY ["SawyersCodeBlog/SawyersCodeBlog.csproj", "SawyersCodeBlog/"]
-COPY ["SawyersCodeBlog.Client/SawyersCodeBlog.Client.csproj", "SawyersCodeBlog.Client/"]
-RUN dotnet restore "SawyersCodeBlog/SawyersCodeBlog.csproj"
+COPY ["MyContactCloud/MyContactCloudcsproj", "MyContactCloud"]
+COPY ["MyContactCloudClient/MyContactCloud.Client.csproj", "MyContactCloud.Client/"]
+RUN dotnet restore "MyContactCloud/MyContactCloud.csproj"
 COPY . .
-WORKDIR "/src/SawyersCodeBlog"
-RUN dotnet build "SawyersCodeBlog.csproj" -c Release -o /app/build
+WORKDIR "/src/MyContactCloud"
+RUN dotnet build "MyContactCloud.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "SawyersCodeBlog.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MyContactCloud.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SawyersCodeBlog.dll"]
+ENTRYPOINT ["dotnet", "MyContactCloud.dll"]
